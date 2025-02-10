@@ -1,2 +1,50 @@
-PLC
-HMI 192.168.
+
+IP xưởng
+PLC 192.168.1.114
+HMI 192.168.1.115
+
+IP VP
+PLC 192.168.2.114
+HMI 192.168.2.117
+
+- Đọc string từ PLC - HMI đang bị lỗi nếu không xếp string trong DB liền kề nhau.
+- position option x:65 Y: 169
+
+
+macro_command main()
+bool SuccessLogin
+bool b_SuccessLogin
+bool b_btnLogOut
+short ResetValueLogin 
+short PageNumber = 10
+short btnLogin_Logout // btnLogin_Logout = 2 khi nhấn nút Login, btnLogin_Logout = 3 khi nhấn nút Logout
+short btn_ActionPageLogin
+short User_Index 
+bool resetbit = false
+
+// Đọc trạng thái Login và nút bấm Login/Logout
+GetData(SuccessLogin, "Local HMI", "UAC command execution result : succeeds", 1)
+GetData(btnLogin_Logout, "Local HMI", "UAC command", 1)
+GetData(btn_ActionPageLogin, "Local HMI", LB, 20, 1)
+GetData(b_SuccessLogin, "Local HMI", LB, 21, 1)
+GetData(b_btnLogOut, "Local HMI", LB, 22, 1)	
+
+if SuccessLogin == 1 and b_SuccessLogin ==1 then	
+	SetData(PageNumber, "Local HMI", LW, 200, 1)
+	SetData(resetbit, "Local HMI", LB, 21, 1)			
+end if
+
+if  btn_ActionPageLogin or b_btnLogOut then	
+	SetData(resetbit, "Local HMI", LB, 21, 1)
+	SetData(resetbit, "Local HMI", LB, 22, 1)
+	DELAY(500)
+	SetData(resetbit, "Local HMI", "UAC command execution result : succeeds", 1)
+	SetData(resetbit, "Local HMI", LB, 20, 1)	
+end if
+end macro_command
+
+
+
+
+
+
