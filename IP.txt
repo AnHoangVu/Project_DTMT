@@ -1,11 +1,12 @@
-
+MT8072iP
 IP xưởng
-PLC 192.168.1.114
+PLC 192.168.1.100
 HMI 192.168.1.115
 
 IP VP
 PLC 192.168.2.114
 HMI 192.168.2.117
+
 
 - Đọc string từ PLC - HMI đang bị lỗi nếu không xếp string trong DB liền kề nhau.
 - position option x:65 Y: 169
@@ -42,6 +43,9 @@ if  btn_ActionPageLogin or b_btnLogOut then
 	SetData(resetbit, "Local HMI", LB, 20, 1)	
 end if
 end macro_command
+
+- Popup sai day time
+
 
 
 

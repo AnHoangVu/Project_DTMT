@@ -1,0 +1,48 @@
+short StatusLogin  // 16: incorrec pass , 1: success, 8: no user name
+bool btnLogIn
+bool btnLogOut
+short btnLogin_Logout // btnLogin_Logout = 2 khi nhấn nút Login, btnLogin_Logout = 3 khi nhấn nút Logout 
+short PageNumber = 10 // stt page Home
+short btnPageLogin // vao trang login
+bool resetbit = 0
+short ResetValue =0
+short CurrentUserName
+
+short FlagLogin
+
+macro_command main()
+
+// Đọc trạng thái Login và nút bấm Login/Logout
+GetData(StatusLogin, "Local HMI", "UAC command execution result : succeeds", 1)
+GetData(btnLogin_Logout, "Local HMI", "UAC command", 1)
+GetData(btnPageLogin, "Local HMI", LB, 20, 1)
+GetData(btnLogIn, "Local HMI", LB, 21, 1)
+GetData(btnLogOut, "Local HMI", LB, 22, 1)
+GetData(CurrentUserName, "Local HMI", LW, 10754, 1)
+
+GetData(FlagLogin, "Local HMI", LW, 10755, 1)
+
+ // vào page đăng nhập hoặc nhấn logout / login
+if  btnPageLogin or btnLogOut or (StatusLogin == 16 and btnLogin_Logout == 1) then		
+	SetData(resetbit, "Local HMI", LB, 20, 1)	
+	SetData(resetbit, "Local HMI", LB, 21, 1)
+	SetData(resetbit, "Local HMI", LB, 22, 1)	
+	DELAY(100)
+	SetData(ResetValue, "Local HMI", "UAC command execution result : succeeds", 1)
+	//SetData(ResetValue, "Local HMI", LW, 10754, 1) // reset current user name
+	
+	//SetData(ResetValue, "Local HMI", LW, 10755, 1)
+end if
+if StatusLogin == 32 then
+	SetData(ResetValue, "Local HMI", "UAC command execution result : succeeds", 1)
+end if 
+
+// nhấn login và thành công
+if StatusLogin == 1 and CurrentUserName > 1  then //20559
+	SetData(PageNumber, "Local HMI", LW, 200, 1)
+	DELAY (100)
+	SetData(resetbit, "Local HMI", LB, 21, 1)	
+		// chuyen trang page home			
+end if
+end macro_command
+
